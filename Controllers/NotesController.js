@@ -1,4 +1,5 @@
 const NotesServices = require("../Services/NotesService");
+const { validationResult } = require("express-validator");
 
 class NotesController {
   async createNote(req, res) {
@@ -32,7 +33,8 @@ class NotesController {
 
   async getNote(req, res) {
     try {
-      const { id } = req.query;
+      const { id } = req.params;
+      console.log("Controller getNote:", id);
       const note = await NotesServices.getNote(Number(id));
       res.json(note);
     } catch (error) {

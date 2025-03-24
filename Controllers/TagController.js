@@ -27,7 +27,7 @@ class TagController {
   }
   async getTag(req, res) {
     try {
-      const { id } = req.query;
+      const { id } = req.params;
       const tag = await TagService.getTag(Number(id));
       res.json(tag);
     } catch (error) {

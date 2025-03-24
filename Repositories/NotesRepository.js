@@ -22,26 +22,67 @@ class NotesRepository {
     try {
       console.log(title, tag, userId);
 
-      let whereCondition = { userId: Number(userId) };
-
-      if (title) {
-        whereCondition.title = { [Op.iLike]: `%${title}%` };
-      }
-
-      if (tag) {
-        whereCondition.tag = Number(tag);
-      }
-
-      return await Notes.findAll({
-        where: whereCondition,
-        include: [
-          {
-            model: Tag,
-            as: "tag",
-            attributes: ["name"],
+      if (title && tag) {
+        return await Notes.findAll({
+          where: {
+            title: { [Op.iLike]: `%${title}%` },
+            tagId: tag,
+            userId: userId,
           },
-        ],
-      });
+          include: [
+            {
+              model: Tag,
+              as: "tag",
+              attributes: ["name"],
+            },
+          ],
+        });
+      }
+
+      if (title && !tag) {
+        return await Notes.findAll({
+          where: { title: { [Op.iLike]: `%${title}%` }, userId: userId },
+        });
+      }
+
+      if (!title && tag) {
+        return await Notes.findAll({
+          where: { tagId: tag, userId: userId },
+          include: [
+            {
+              model: Tag,
+              as: "tag",
+              attributes: ["name"],
+            },
+          ],
+        });
+      }
+
+      if (!title && !tag) {
+        return await Notes.findAll({
+          where: { userId: userId },
+        });
+      }
+      // let whereCondition = { userId: Number(userId) };
+
+      // if (title) {
+      //   whereCondition.title = { [Op.iLike]: `%${title}%` };
+      // }
+
+      // if (tag) {
+      //   whereCondition.tag = Number(tag);
+      // }
+
+      // return await Notes.findAll({
+      //   where: whereCondition,
+      //   include: [
+      //     {
+      //       model: Tag,
+      //       as: "tag",
+      //       attributes: ["name"],
+      //     },
+      //   ],
+      // });
     } catch (error) {
       console.log("Ошибка получения заметок", error);
       throw error;
@@ -50,7 +91,16 @@ class NotesRepository {
 
   async getNote(id) {
     try {
-      return await Notes.findOne({ where: { id: id } });
+      return await Notes.findOne({
+        where: { id: id },
+        include: [
+          {
+            model: Tag,
+            as: "tag",
+            attributes: ["name"],
+          },
+        ],
+      });
     } catch (error) {
       console.log("Ошибка получения заметок", error);
       throw error;
