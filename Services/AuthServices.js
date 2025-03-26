@@ -3,15 +3,23 @@ const UserRepository = require("../Repositories/UserRepository");
 const jwt = require("jsonwebtoken");
 
 class AuthServices {
-  async register(login, password) {
+  async register(RegistrationDTO) {
     try {
-      const user = await UserRepository.getUserByLogin(login);
+      //Check user don't exists
+      const user = await UserRepository.getUserByLogin(RegistrationDTO.login);
       if (user) {
         console.log("Пользователь существует");
-        return { message: "Пользователь существует" };
+        return new Error("Пользователь существует");
       }
-      const hashPassword = await bcrypt.hash(password, 7);
-      await UserRepository.createUser(login, hashPassword);
+      if (RegistrationDTO.password !== RegistrationDTO.confirmedPassword) {
+        console.log("Пароли не совпадают");
+        return new Error("Пароли не совпадают");
+      }
+
+      //Hash password
+      const hashPassword = await bcrypt.hash(RegistrationDTO.password, 7);
+
+      await UserRepository.createUser(RegistrationDTO.login, hashPassword);
       console.log("Пользователь добавлен в БД");
       return { message: "Пользователь зарегистрировался" };
     } catch (error) {
