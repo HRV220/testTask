@@ -3,9 +3,7 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swaggerConfig");
 const { User, Tag, Notes } = require("./Models/associations");
 const express = require("express");
-const authRouter = require("./Routes/authRouter");
-const noteRouter = require("./Routes/notesRoutes");
-const tagRouter = require("./Routes/tagRouter");
+const mainRouter = require("./Routes/mainRouter");
 const cors = require("cors");
 //создаем объект приложения
 const app = express();
@@ -13,9 +11,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(cors());
 app.use(express.json());
 
-app.use("/auth", authRouter);
-app.use("/notes", noteRouter);
-app.use("/tags", tagRouter);
+app.use(mainRouter);
 
 dbContext
   .sync({ force: false })
