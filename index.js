@@ -13,6 +13,6 @@ app.use(express.json());
 
 app.use(mainRouter);
 
-dbContext.syncDatabase().then(() => {
+dbContext.syncDatabase(false).then(() => {
   app.listen(3000, () => console.log("Сервер запущен!"));
 });

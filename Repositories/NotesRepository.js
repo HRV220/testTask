@@ -101,18 +101,45 @@ class NotesRepository {
   async deleteNote(id) {
     try {
       console.log("Удаление заметки", id);
-      return await Notes.destroy({ where: { id: id } });
+      const note = await this.getNote(id);
+      if (!note) {
+        console.log("Заметка с таким id не найдена");
+        throw new Error("Заметка с таким id не найдена");
+      }
+      // Удаление заметки
+      const result = await Notes.destroy({ where: { id: id } });
+
+      // Проверка, если заметка не была удалена
+      if (result === 0) {
+        throw new Error("Не удалось удалить заметку");
+      }
+
+      // Возвращаем успешный ответ
+      return { message: "Заметка успешно удалена", status: "success" };
     } catch (error) {
       console.log("Ошибка удаления заметки", error);
     }
   }
   async updateNote(id, title, text, tag) {
     try {
-      console.log("Обновлене заметки", id);
-      return await Notes.update(
+      const note = await this.getNote(id);
+      if (!note) {
+        console.log("Заметка с таким id не найдена");
+        throw new Error("Заметка с таким id не найдена");
+      }
+
+      // Обновляем заметку
+      const [updatedRows] = await Notes.update(
         { title: title, text: text, tagId: tag },
         { where: { id: id } }
       );
+
+      // Если ничего не было обновлено, выбрасываем ошибку
+      if (updatedRows === 0) {
+        throw new Error("Не удалось обновить заметку");
+      }
+      // Возвращаем успешный ответ
+      return { message: "Заметка успешно обновлена", status: "success" };
     } catch (error) {
       console.log("Ошибка обновления заметки", error);
     }

@@ -1,12 +1,18 @@
 const Sequelize = require("sequelize");
+require("dotenv").config();
 
 class DbContext {
   constructor() {
-    this.sequelize = new Sequelize("notes", "admin", "admin", {
-      host: "localhost",
-      dialect: "postgres",
-      logging: true, // Включаем логирование для отладки
-    });
+    this.sequelize = new Sequelize(
+      process.env.DB_NAME,
+      process.env.DB_USER,
+      process.env.DB_PASSWORD,
+      {
+        host: process.env.DB_HOST,
+        dialect: process.env.DB_DIALECT,
+        logging: false, // Включаем логирование для отладки
+      }
+    );
   }
   //Логгирование БД
   async syncDatabase(force = false) {

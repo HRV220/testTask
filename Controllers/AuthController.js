@@ -5,7 +5,6 @@ const { validationResult } = require("express-validator");
 class authController {
   constructor(authService) {
     this.authService = authService;
-    console.log("AuthController constructor: authService =", this.authService); // ADD THIS LINE
   }
   async registration(req, res) {
     try {
@@ -29,8 +28,6 @@ class authController {
   }
   async login(req, res) {
     try {
-      console.log("login");
-      console.log("AuthController login: this.authService =", this.authService); // ADD THIS LINE
       //Валидация
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
