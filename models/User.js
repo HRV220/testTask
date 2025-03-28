@@ -1,7 +1,17 @@
 const Sequelize = require("sequelize");
 const dbContext = require("../Infrastructure/DbContext");
 
-const User = dbContext.define("User", {
+const sequelizeInstance = dbContext.getSequelize();
+console.log(
+  "sequelizeInstance is Sequelize:",
+  sequelizeInstance instanceof Sequelize
+);
+console.log(
+  "sequelizeInstance.define is a function:",
+  typeof sequelizeInstance.define === "function"
+);
+
+const User = dbContext.getSequelize().define("User", {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,

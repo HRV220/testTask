@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const dbContext = require("../Infrastructure/DbContext");
 
-const Tag = dbContext.define("Tag", {
+const Tag = dbContext.getSequelize().define("Tag", {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,

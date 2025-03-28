@@ -13,14 +13,6 @@ app.use(express.json());
 
 app.use(mainRouter);
 
-dbContext
-  .sync({ force: false })
-  .then(() => {
-    console.log("База данных синхронизирована!");
-  })
-  .catch((err) => {
-    console.error("Ошибка синхронизации базы данных:", err);
-  });
-
-// начинаем прослушивать подключения на 3000 порту
-app.listen(3000, () => console.log("Сервер запущен!"));
+dbContext.syncDatabase().then(() => {
+  app.listen(3000, () => console.log("Сервер запущен!"));
+});

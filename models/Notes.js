@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const dbContext = require("../Infrastructure/DbContext");
 
-const Notes = dbContext.define("Notes", {
+const Notes = dbContext.getSequelize().define("Notes", {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
