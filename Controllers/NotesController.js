@@ -1,7 +1,9 @@
-const NotesServices = require("../Services/NotesService");
 const { validationResult } = require("express-validator");
 
 class NotesController {
+  constructor(NotesServices) {
+    this.NotesServices = NotesServices;
+  }
   async createNote(req, res) {
     try {
       const errors = validationResult(req);
@@ -11,7 +13,12 @@ class NotesController {
       const { title, text, tag } = req.body;
       const userId = Number(req.user.id);
       console.log("Создание заметки:", { title, text, userId: req.user.id });
-      const note = await NotesServices.createNote(title, text, tag, userId);
+      const note = await this.NotesServices.createNote(
+        title,
+        text,
+        tag,
+        userId
+      );
       res.status(201).json(note);
     } catch (error) {
       console.log(error);
@@ -23,7 +30,7 @@ class NotesController {
       const userId = Number(req.user.id);
       const { title, tag } = req.query;
       console.log("Controller getNotes:", title, tag, userId);
-      const notes = await NotesServices.getNotes(title, tag, userId);
+      const notes = await this.NotesServices.getNotes(title, tag, userId);
       res.json(notes);
     } catch (error) {
       console.log(error);
@@ -35,7 +42,7 @@ class NotesController {
     try {
       const { id } = req.params;
       console.log("Controller getNote:", id);
-      const note = await NotesServices.getNote(Number(id));
+      const note = await this.NotesServices.getNote(Number(id));
       res.json(note);
     } catch (error) {
       console.log(error);
@@ -51,7 +58,7 @@ class NotesController {
       }
       const { id } = req.params;
       const { title, text, tag } = req.body;
-      const note = await NotesServices.updateNote(id, title, text, tag);
+      const note = await this.NotesServices.updateNote(id, title, text, tag);
       res.json(note);
     } catch (error) {
       console.log(error);
@@ -62,7 +69,7 @@ class NotesController {
   async deleteNote(req, res) {
     try {
       const { id } = req.params;
-      const note = await NotesServices.deleteNote(id);
+      const note = await this.NotesServices.deleteNote(id);
       res.json(note);
     } catch (error) {
       console.log(error);
@@ -71,4 +78,4 @@ class NotesController {
   }
 }
 
-module.exports = new NotesController();
+module.exports = NotesController;

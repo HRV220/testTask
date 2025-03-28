@@ -7,9 +7,7 @@ const { check } = require("express-validator");
 
 const userRepository = new UserRepository();
 const authService = new AuthServices(userRepository);
-console.log(authService);
 const controller = new AuthController(authService);
-console.log(controller);
 
 /**
  * @swagger

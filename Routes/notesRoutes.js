@@ -1,8 +1,14 @@
 const Router = require("express");
 const router = new Router();
-const controller = require("../Controllers/NotesController");
+const NotesController = require("../Controllers/NotesController");
+const NotesRepository = require("../Repositories/NotesRepository");
+const NotesServices = require("../Services/NotesService");
 const authMiddleware = require("../Middleware/authMiddleware");
 const { check } = require("express-validator");
+
+const notesRepository = new NotesRepository();
+const notesService = new NotesServices(notesRepository);
+const controller = new NotesController(notesService);
 
 /**
  * @swagger
@@ -50,7 +56,7 @@ router.post(
   "/createNote",
   [check("title", "Название заметки не может быть пустым").notEmpty()],
   authMiddleware,
-  controller.createNote
+  (req, res) => controller.createNote(req, res)
 );
 
 /**
@@ -83,7 +89,9 @@ router.post(
  *         description: Неавторизованный доступ
  */
 
-router.get("/getNotes", authMiddleware, controller.getNotes);
+router.get("/getNotes", authMiddleware, (req, res) =>
+  controller.getNotes(req, res)
+);
 
 /**
  * @swagger
@@ -109,7 +117,9 @@ router.get("/getNotes", authMiddleware, controller.getNotes);
  *         description: Неавторизованный доступ
  */
 
-router.get("/getNote/:id", authMiddleware, controller.getNote);
+router.get("/getNote/:id", authMiddleware, (req, res) =>
+  controller.getNote(req, res)
+);
 /**
  * @swagger
  * /notes/updateNote/{id}:
@@ -155,7 +165,7 @@ router.put(
   "/updateNote/:id",
   [check("title", "Название заметки не может быть пустым").notEmpty()],
   authMiddleware,
-  controller.updateNote
+  (req, res) => controller.updateNote(req, res)
 );
 /**
  * @swagger
@@ -180,6 +190,8 @@ router.put(
  *       401:
  *         description: Неавторизованный доступ
  */
-router.delete("/deleteNote/:id", authMiddleware, controller.deleteNote);
+router.delete("/deleteNote/:id", authMiddleware, (req, res) =>
+  controller.deleteNote(req, res)
+);
 
 module.exports = router;

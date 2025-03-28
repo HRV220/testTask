@@ -1,4 +1,3 @@
-const { where } = require("sequelize");
 const { Op } = require("sequelize");
 const Notes = require("../Models/Notes");
 const Tag = require("../Models/Tags");
@@ -63,26 +62,6 @@ class NotesRepository {
           where: { userId: userId },
         });
       }
-      // let whereCondition = { userId: Number(userId) };
-
-      // if (title) {
-      //   whereCondition.title = { [Op.iLike]: `%${title}%` };
-      // }
-
-      // if (tag) {
-      //   whereCondition.tag = Number(tag);
-      // }
-
-      // return await Notes.findAll({
-      //   where: whereCondition,
-      //   include: [
-      //     {
-      //       model: Tag,
-      //       as: "tag",
-      //       attributes: ["name"],
-      //     },
-      //   ],
-      // });
     } catch (error) {
       console.log("Ошибка получения заметок", error);
       throw error;
@@ -128,4 +107,4 @@ class NotesRepository {
   }
 }
 
-module.exports = new NotesRepository();
+module.exports = NotesRepository;

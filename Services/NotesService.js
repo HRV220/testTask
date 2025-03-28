@@ -1,9 +1,10 @@
-const notesRepository = require("../Repositories/NotesRepository");
-
 class NotesServices {
+  constructor(notesRepository) {
+    this.notesRepository = notesRepository;
+  }
   async createNote(title, text, tag, userId) {
     try {
-      return await notesRepository.createNote(title, text, tag, userId);
+      return await this.notesRepository.createNote(title, text, tag, userId);
     } catch (error) {
       console.log("Ошибка создания заметки", error);
       throw error;
@@ -13,7 +14,7 @@ class NotesServices {
   async getNotes(title, tag, userId) {
     try {
       console.log("Service getNotes:", title, tag, userId);
-      return await notesRepository.getNotes(title, tag, userId);
+      return await this.notesRepository.getNotes(title, tag, userId);
     } catch (error) {
       console.log("Ошибка получения заметок", error);
       throw error;
@@ -22,7 +23,7 @@ class NotesServices {
 
   async getNote(id) {
     try {
-      return await notesRepository.getNote(id);
+      return await this.notesRepository.getNote(id);
     } catch (error) {
       console.log("Ошибка получения заметок", error);
       throw error;
@@ -31,7 +32,7 @@ class NotesServices {
 
   async deleteNote(id) {
     try {
-      return await notesRepository.deleteNote(id);
+      return await this.notesRepository.deleteNote(id);
     } catch (error) {
       this.logger.error("Ошибка удаления заметки", error);
       throw error;
@@ -39,7 +40,7 @@ class NotesServices {
   }
   async updateNote(id, title, text, tag) {
     try {
-      return await notesRepository.updateNote(id, title, text, tag);
+      return await this.notesRepository.updateNote(id, title, text, tag);
     } catch (error) {
       this.logger.error("Ошибка обновления заметки", error);
       throw error;
@@ -47,4 +48,4 @@ class NotesServices {
   }
 }
 
-module.exports = new NotesServices();
+module.exports = NotesServices;
