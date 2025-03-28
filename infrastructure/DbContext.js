@@ -14,7 +14,6 @@ class DbContext {
       }
     );
   }
-  //Логгирование БД
   async syncDatabase(force = false) {
     try {
       await this.sequelize.sync({ force });
