@@ -29,4 +29,4 @@ class TagRepository {
   }
 }
 
-module.exports = new TagRepository();
+module.exports = TagRepository;

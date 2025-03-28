@@ -1,8 +1,15 @@
 const Router = require("express");
 const router = new Router();
-const controller = require("../Controllers/TagController");
+const TagsRepository = require("../Repositories/TagRepository");
+const TagsService = require("../Services/TagService");
+const TagsController = require("../Controllers/TagController");
 const authMiddleware = require("../Middleware/authMiddleware");
 const { check } = require("express-validator");
+
+const tagsRepository = new TagsRepository();
+const tagsService = new TagsService(tagsRepository);
+const controller = new TagsController(tagsService);
+
 /**
  * @swagger
  * tags:
@@ -40,7 +47,7 @@ router.post(
   "/createTag",
   [check("name", "Название тега не может быть пустым").notEmpty()],
   authMiddleware,
-  controller.createTag
+  (req, res) => controller.createTag(req, res)
 );
 /**
  * @swagger
@@ -56,7 +63,9 @@ router.post(
  *       401:
  *         description: Неавторизованный доступ
  */
-router.get("/getTags", authMiddleware, controller.getTags);
+router.get("/getTags", authMiddleware, (req, res) =>
+  controller.getTags(req, res)
+);
 /**
  * @swagger
  * /tags/getTag/{id}:
@@ -80,6 +89,8 @@ router.get("/getTags", authMiddleware, controller.getTags);
  *       401:
  *         description: Неавторизованный доступ
  */
-router.get("/getTag/:id", authMiddleware, controller.getTag);
+router.get("/getTag/:id", authMiddleware, (req, res) =>
+  controller.getTag(req, res)
+);
 
 module.exports = router;

@@ -1,9 +1,10 @@
-const tagRepository = require("../Repositories/TagRepository");
-
 class TagService {
+  constructor(tagRepository) {
+    this.tagRepository = tagRepository;
+  }
   async createTag(name) {
     try {
-      return await tagRepository.createTag(name);
+      return await this.tagRepository.createTag(name);
     } catch (error) {
       console.log("Ошибка создания тега", error);
       throw error;
@@ -11,7 +12,7 @@ class TagService {
   }
   async getTags() {
     try {
-      return await tagRepository.getTags();
+      return await this.tagRepository.getTags();
     } catch (error) {
       console.log("Ошибка получения тегов", error);
       throw error;
@@ -19,7 +20,7 @@ class TagService {
   }
   async getTag(id) {
     try {
-      return await tagRepository.getTag(id);
+      return await this.tagRepository.getTag(id);
     } catch (error) {
       console.log("Ошибка получения тега", error);
       throw error;
@@ -27,4 +28,4 @@ class TagService {
   }
 }
 
-module.exports = new TagService();
+module.exports = TagService;
