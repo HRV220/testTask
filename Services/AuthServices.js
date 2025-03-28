@@ -1,25 +1,29 @@
 const bcrypt = require("bcrypt");
-const UserRepository = require("../Repositories/UserRepository");
 const jwt = require("jsonwebtoken");
 
 class AuthServices {
+  constructor(userRepository) {
+    this.userRepository = userRepository;
+  }
   async register(RegistrationDTO) {
     try {
       //Check user don't exists
-      const user = await UserRepository.getUserByLogin(RegistrationDTO.login);
+      const user = await this.userRepository.getUserByLogin(
+        RegistrationDTO.login
+      );
       if (user) {
         console.log("Пользователь существует");
-        return new Error("Пользователь существует");
+        throw new Error("Пользователь существует");
       }
       if (RegistrationDTO.password !== RegistrationDTO.confirmedPassword) {
         console.log("Пароли не совпадают");
-        return new Error("Пароли не совпадают");
+        throw new Error("Пароли не совпадают");
       }
 
       //Hash password
       const hashPassword = await bcrypt.hash(RegistrationDTO.password, 7);
 
-      await UserRepository.createUser(RegistrationDTO.login, hashPassword);
+      await this.userRepository.createUser(RegistrationDTO.login, hashPassword);
       console.log("Пользователь добавлен в БД");
       return { message: "Пользователь зарегистрировался" };
     } catch (error) {
@@ -29,7 +33,7 @@ class AuthServices {
   }
   async login(LoginDTO) {
     try {
-      const user = await UserRepository.getUserByLogin(LoginDTO.login);
+      const user = await this.userRepository.getUserByLogin(LoginDTO.login);
       //Проверка на существование пользователя в БД
       if (!user) {
         console.log("Пользователь не найден");
@@ -52,4 +56,4 @@ class AuthServices {
   }
 }
 
-module.exports = new AuthServices();
+module.exports = AuthServices;

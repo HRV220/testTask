@@ -1,7 +1,15 @@
 const Router = require("express");
 const router = new Router();
-const controller = require("../Controllers/AuthController");
+const AuthController = require("../Controllers/AuthController");
+const UserRepository = require("../Repositories/UserRepository");
+const AuthServices = require("../Services/AuthServices");
 const { check } = require("express-validator");
+
+const userRepository = new UserRepository();
+const authService = new AuthServices(userRepository);
+console.log(authService);
+const controller = new AuthController(authService);
+console.log(controller);
 
 /**
  * @swagger
@@ -47,7 +55,7 @@ router.post(
       min: 4,
     }),
   ],
-  controller.registration
+  (req, res) => controller.registration(req, res)
 );
 
 /**
@@ -87,7 +95,7 @@ router.post(
       min: 4,
     }),
   ],
-  controller.login
+  (req, res) => controller.login(req, res)
 );
 
 module.exports = router;

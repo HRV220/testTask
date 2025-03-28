@@ -1,9 +1,12 @@
 const LoginDTO = require("../Models/DTO/LoginDTO");
 const RegistrationDTO = require("../Models/DTO/RegistrationDTO");
-const authService = require("../Services/AuthServices");
 const { validationResult } = require("express-validator");
 
 class authController {
+  constructor(authService) {
+    this.authService = authService;
+    console.log("AuthController constructor: authService =", this.authService); // ADD THIS LINE
+  }
   async registration(req, res) {
     try {
       //Validations
@@ -17,15 +20,17 @@ class authController {
         req.body.confirmedPassword
       );
 
-      const user = await authService.register(registrationDTO);
+      const user = await this.authService.register(registrationDTO);
       res.status(201).json(user);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(500).json({ error: error.message });
       console.log(error);
     }
   }
   async login(req, res) {
     try {
+      console.log("login");
+      console.log("AuthController login: this.authService =", this.authService); // ADD THIS LINE
       //Валидация
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -33,14 +38,14 @@ class authController {
       }
       const loginDTO = new LoginDTO(req.body.login, req.body.password);
       //Получение токена
-      const token = await authService.login(loginDTO);
+      const token = await this.authService.login(loginDTO);
       //Возвращение результата
       res.status(200).json({ token: token });
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(500).json({ error: error.message });
       console.log(error);
     }
   }
 }
 
-module.exports = new authController();
+module.exports = authController;
