@@ -12,7 +12,12 @@ class NotesController {
       }
       const { title, text, tag } = req.body;
       const userId = Number(req.user.id);
-      console.log("Создание заметки:", { title, text, userId: req.user.id });
+      console.log("Создание заметки:", {
+        title,
+        tag,
+        text,
+        userId: req.user.id,
+      });
       const note = await this.NotesServices.createNote(
         title,
         text,

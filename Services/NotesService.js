@@ -4,6 +4,7 @@ class NotesServices {
   }
   async createNote(title, text, tag, userId) {
     try {
+      console.log("Service createNote:", title, text, tag, userId);
       return await this.notesRepository.createNote(title, text, tag, userId);
     } catch (error) {
       console.log("Ошибка создания заметки", error);

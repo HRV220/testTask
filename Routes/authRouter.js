@@ -31,11 +31,15 @@ const controller = new AuthController(authService);
  *             required:
  *               - login
  *               - password
+ *               - confirmedPassword
  *             properties:
  *               login:
  *                 type: string
  *                 example: "user123"
  *               password:
+ *                 type: string
+ *                 example: "mypassword"
+ *               confirmedPassword:
  *                 type: string
  *                 example: "mypassword"
  *     responses:

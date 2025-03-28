@@ -5,12 +5,24 @@ const Tag = require("../Models/Tags");
 class NotesRepository {
   async createNote(title, text, tag, userId) {
     try {
+      let tagId = null;
+      //Проверяем тег на null
+      if (tag) {
+        let FindTag = await Tag.findOne({ where: { name: tag } });
+        //ЕСли тег не null, но такого тега не существует
+        if (!FindTag) {
+          console.log("Тег не найден, создаем новый тег:", tag);
+          FindTag = await Tag.create({ name: tag });
+          console.log("Новый тег создан:", FindTag);
+        }
+        tagId = FindTag.id;
+      }
       console.log("Создание заметки");
-      return await Notes.create({
+      await Notes.create({
         title: title,
         text: text,
-        tag: Number(tag),
-        userId: Number(userId),
+        tagId: tagId,
+        userId: userId,
       });
     } catch (error) {
       console.log("Ошибка создания заметки", error);
