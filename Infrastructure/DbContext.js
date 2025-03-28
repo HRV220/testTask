@@ -8,8 +8,9 @@ class DbContext {
       process.env.DB_USER,
       process.env.DB_PASSWORD,
       {
-        host: process.env.DB_HOST,
+        host: "db",
         dialect: process.env.DB_DIALECT,
+        port: process.env.POSTGRES_PORT,
         logging: false, // Включаем логирование для отладки
       }
     );
